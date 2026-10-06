@@ -114,9 +114,12 @@
     }
   }
 
+  // 메타가 광고 클릭 주소에 붙이는 fbclid 를 가입 페이지로 그대로 넘긴다 — 가입 페이지의 메타 픽셀이 이걸 쿠키(_fbc)로 남겨
+  // 앱 안 브라우저 → 크롬·사파리로 넘어가 가입해도 광고 클릭과 가입을 잇는다(2026-10-06 메타 픽셀 추가)
+  var fbclid = String(q.get('fbclid') || '').replace(/[^A-Za-z0-9_\-]/g, '').slice(0, 500);
   function target(route) {
     return SIGNUP + '?utm_source=' + encodeURIComponent(source) + '&utm_medium=' + encodeURIComponent(medium)
-      + '&utm_campaign=' + encodeURIComponent(campaign) + '&utm_content=' + route;
+      + '&utm_campaign=' + encodeURIComponent(campaign) + '&utm_content=' + route + (fbclid ? '&fbclid=' + fbclid : '');
   }
   var navs = [];
   function nav(url) { navs.push(url); try { location.href = url; } catch (e) {} }
