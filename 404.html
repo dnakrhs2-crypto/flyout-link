@@ -41,6 +41,11 @@
   var APP_STORE = 'https://apps.apple.com/kr/app/flyout/id6770570785';
   var PLAY_ID = 'fun.flyout.app';
   var IOS_PROVIDER_TOKEN = '';            // App Store Connect 캠페인 링크 pt 값이 나오면 여기에 (ct=캠페인 자동)
+  // 2026-10-08 앱이 App Store에서 사라져(앱 주소 = '찾으시는 페이지를 찾을 수 없습니다') 아이폰은 웹 가입 중간 페이지(/join/)로 보낸다.
+  // /join/ 이 출처값(utm)을 붙여 flyout.fun/register 로 넘기고, 앱 안 브라우저면 Safari로 여는 안내를 띄운다. 앱이 돌아오면 false.
+  var IOS_TO_WEB = true;
+  // 웹 가입 출처값(폴더별). 표에 없으면 출처 = 아래 source, 매체 smartlink. 매일 광고 보고는 출처에 exoclick 이 있어야 엑소로 센다.
+  var WEB = { x: { source: 'x', medium: 'cpc' }, exo: { source: 'exoclick', medium: 'display' } };
   var q = new URLSearchParams(location.search);
   // 캠페인 = /flyout/app/<이름>/ 의 마지막 경로 조각, 없으면 ?c=, 둘 다 없으면 direct
   var parts = location.pathname.replace(/\/index\.html$/i, '').replace(/\/+$/, '').split('/');
@@ -53,10 +58,14 @@
   var isAndroid = /Android/i.test(ua);
   var referrer = encodeURIComponent('utm_source=' + source + '&utm_medium=smartlink&utm_campaign=' + campaign);
   var playUrl = 'https://play.google.com/store/apps/details?id=' + PLAY_ID + '&referrer=' + referrer;
-  var iosUrl = APP_STORE + (IOS_PROVIDER_TOKEN ? '?pt=' + IOS_PROVIDER_TOKEN + '&ct=' + encodeURIComponent(campaign) : '');
+  var web = WEB[campaign] || { source: source, medium: 'smartlink' };
+  var webUrl = '/join/?c=' + encodeURIComponent(campaign) + '&s=' + encodeURIComponent(web.source) + '&m=' + encodeURIComponent(web.medium);
+  var iosUrl = IOS_TO_WEB ? webUrl : APP_STORE + (IOS_PROVIDER_TOKEN ? '?pt=' + IOS_PROVIDER_TOKEN + '&ct=' + encodeURIComponent(campaign) : '');
   document.getElementById('ios').href = iosUrl;
+  if (IOS_TO_WEB) document.getElementById('ios').textContent = '웹에서 가입하기';
   document.getElementById('android').href = playUrl;
-  window.__smartlink = { campaign: campaign, source: source, isIOS: isIOS, isAndroid: isAndroid, iosUrl: iosUrl, playUrl: playUrl };
+  if (IOS_TO_WEB && isIOS) document.getElementById('h').textContent = 'Flyout 가입 페이지로 이동 중…';
+  window.__smartlink = { campaign: campaign, source: source, isIOS: isIOS, isAndroid: isAndroid, iosUrl: iosUrl, playUrl: playUrl, iosToWeb: IOS_TO_WEB };
 
   var target = isIOS ? iosUrl : (isAndroid ? playUrl : '');
   var done = false;
@@ -71,8 +80,8 @@
     document.getElementById('hint').hidden = false;
     if (desktop) {
       document.getElementById('h').textContent = 'Flyout 앱 받기';
-      document.getElementById('p').textContent = '휴대폰에서 이 링크를 열면 스토어로 바로 이동합니다.';
-      document.getElementById('hint').textContent = 'PC에서는 아래 버튼으로 스토어 페이지를 열 수 있습니다.';
+      document.getElementById('p').textContent = IOS_TO_WEB ? '휴대폰에서 이 링크를 열면 바로 이동합니다.' : '휴대폰에서 이 링크를 열면 스토어로 바로 이동합니다.';
+      document.getElementById('hint').textContent = IOS_TO_WEB ? 'PC에서는 아래 버튼을 눌러 주세요.' : 'PC에서는 아래 버튼으로 스토어 페이지를 열 수 있습니다.';
     }
   }
   if (!target) { showButtons(true); return; }
