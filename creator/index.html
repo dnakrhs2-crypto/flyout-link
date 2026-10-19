@@ -8,60 +8,81 @@
 <meta name="description" content="flyout 통화 크리에이터 모집 안내: 통화한 만큼 분당 1,000원, 주급 정산">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
+  /* 반경 규칙: 큰 상자 20px, 아이콘 칸 12px, 작은 표식은 알약형 */
   :root{
-    --bg:#FFFFFF; --grey:#F2F4F6; --grey2:#E5E8EB; --ink:#191F28; --sub:#4E5968; --dim:#8B95A1;
-    --blue:#8B5CF6; --blue-soft:#F1EBFF; --blue-ink:#6A3DE8;   /* the logo's lavender, darkened for text */
+    --bg:#FFFFFF; --grey:#F2F4F6; --grey2:#E5E8EB; --ink:#191F28; --sub:#4E5968; --dim:#6B7684;
+    --accent:#8B5CF6; --accent-ink:#6A3DE8; --accent-strong:#7C4FF0; --accent-soft:#F1EBFF;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;word-break:keep-all}
-  .wrap{max-width:560px;margin:0 auto;padding:20px 20px 40px}
-  .top{display:flex;align-items:center;justify-content:space-between;padding:4px 0 26px}
+  html{-webkit-text-size-adjust:100%}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+  img,svg{display:block}
+  .ic{width:1em;height:1em;fill:currentColor;flex:none}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 20px 48px}
+
+  .top{display:flex;align-items:center;justify-content:space-between;padding:4px 0 30px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px;letter-spacing:-.02em}
-  .brand img{height:34px;width:auto;display:block}
-  .badge{font-size:13px;font-weight:600;color:var(--blue-ink);background:var(--blue-soft);padding:6px 10px;border-radius:8px}
-  .hello{color:var(--dim);font-size:15px;margin:0 0 8px;font-weight:500}
-  h1{font-size:28px;line-height:1.35;font-weight:800;letter-spacing:-.03em;margin:0;text-wrap:balance}
-  h1 span{color:var(--blue)}
-  .lead{margin:12px 0 0;color:var(--sub);font-size:16px}
-  .money{margin-top:24px;background:var(--grey);border-radius:20px;padding:22px 20px}
-  .money .l{font-size:14px;color:var(--dim);font-weight:500}
-  .money .v{font-size:34px;font-weight:800;letter-spacing:-.03em;margin:2px 0 0;font-variant-numeric:tabular-nums;line-height:1.2}
-  .money .v small{font-size:16px;font-weight:600;color:var(--sub);margin-left:6px;letter-spacing:0}
-  .money .rows{margin-top:16px;padding-top:14px;border-top:1px solid var(--grey2);display:grid;gap:10px}
-  .money .r{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;color:var(--sub)}
-  .money .r b{color:var(--ink);font-size:17px;font-variant-numeric:tabular-nums;font-weight:700}
-  section{margin-top:40px}
-  h2{font-size:21px;font-weight:800;letter-spacing:-.02em;margin:0 0 16px}
-  .steps{display:grid;gap:14px}
+  .brand img{height:34px;width:auto}
+  .badge{font-size:13px;font-weight:650;color:var(--accent-ink);background:var(--accent-soft);padding:6px 12px;border-radius:999px}
+
+  .hello{margin:0 0 10px;color:var(--dim);font-size:15px;font-weight:500}
+  h1{margin:0;font-size:clamp(27px,7.4vw,34px);line-height:1.32;font-weight:800;letter-spacing:-.03em;text-wrap:balance}
+  h1 span{color:var(--accent)}
+  .lead{margin:12px 0 0;color:var(--sub);font-size:16px;text-wrap:pretty}
+
+  .money{margin-top:28px;background:var(--grey);border-radius:20px;padding:24px 22px 22px}
+  .money .l{font-size:14px;font-weight:600;color:var(--dim)}
+  .money .v{margin:4px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;font-size:38px;font-weight:800;letter-spacing:-.035em;line-height:1.15;font-variant-numeric:tabular-nums}
+  .money .v small{font-size:13.5px;font-weight:650;letter-spacing:0;line-height:1.4;color:var(--accent-ink);background:var(--accent-soft);padding:4px 10px;border-radius:999px}
+  .money .rows{margin-top:20px;padding-top:18px;border-top:1px solid var(--grey2);display:grid;gap:13px}
+  .money .r{display:flex;justify-content:space-between;align-items:baseline;gap:16px;font-size:15px;color:var(--sub)}
+  .money .r small{display:block;margin-top:1px;font-size:13px;color:var(--dim)}
+  .money .r b{color:var(--ink);font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  .extra{margin-top:12px;display:flex;gap:14px;align-items:flex-start;padding:20px 20px 20px 18px;border-radius:20px;background:var(--accent-soft)}
+  .extra .ico{background:#FFFFFF}
+  .extra p{margin:0;color:var(--sub);font-size:15px;text-wrap:pretty}
+  .extra p b{display:block;margin-bottom:4px;color:var(--ink);font-size:16px;font-weight:700;line-height:1.5}
+
+  section{margin-top:48px}
+  h2{margin:0 0 18px;font-size:22px;font-weight:800;letter-spacing:-.025em;line-height:1.35}
+  .steps{display:grid;gap:18px}
   .step{display:flex;gap:14px;align-items:flex-start}
-  .ico{flex:none;width:40px;height:40px;border-radius:12px;background:var(--blue-soft);display:grid;place-items:center}
-  .ico svg{width:20px;height:20px;stroke:var(--blue);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .step b{display:block;font-size:16px;font-weight:700}
-  .step p{margin:2px 0 0;color:var(--sub);font-size:15px}
+  .ico{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:23px}
+  .step b{display:block;padding-top:1px;font-size:16.5px;font-weight:700;line-height:1.45}
+  .step p{margin:3px 0 0;color:var(--sub);font-size:15px;text-wrap:pretty}
   .list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
-  .list li{display:flex;gap:10px;align-items:flex-start;color:var(--sub)}
-  .list li:before{content:"";flex:none;width:18px;height:18px;margin-top:4px;border-radius:50%;background:var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/11px no-repeat}
-  .kv{display:grid;gap:0;border-top:1px solid var(--grey);margin-top:4px}
-  .kv .r{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--grey);color:var(--sub)}
-  .kv .r b{color:var(--ink);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
-  .kv .r small{display:block;color:var(--dim);font-size:13px;margin-top:2px}
-  .callout{margin-top:40px;background:var(--blue);color:#fff;border-radius:20px;padding:22px 20px}
-  .callout .l{font-size:14px;opacity:.85;font-weight:500}
-  .callout p{margin:6px 0 0;font-size:20px;font-weight:800;line-height:1.4;letter-spacing:-.02em}
-  .faq{display:grid;gap:0}
-  .qa{padding:16px 0;border-bottom:1px solid var(--grey)}
+  .steps + .list{margin-top:24px}
+  .list li{display:flex;gap:10px;align-items:flex-start;color:var(--sub);font-size:15.5px}
+  .chk{flex:none;width:20px;height:20px;margin-top:3px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#FFFFFF;font-size:12px}
+
+  .kv{border-top:1px solid var(--grey2)}
+  .kv .r{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:15px 0;border-bottom:1px solid var(--grey2);color:var(--sub);font-size:15.5px}
+  .kv .r b{color:var(--ink);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .kv .r small{display:block;margin-top:1px;color:var(--dim);font-size:13px}
+
+  .callout{margin-top:48px;background:var(--accent-strong);color:#FFFFFF;border-radius:20px;padding:24px 22px}
+  .callout .l{font-size:14px;font-weight:600}
+  .callout p{margin:6px 0 0;font-size:20px;font-weight:800;line-height:1.45;letter-spacing:-.02em;text-wrap:balance}
+
+  .qa{padding:16px 0;border-bottom:1px solid var(--grey2)}
+  .qa:first-child{padding-top:2px}
   .qa:last-child{border-bottom:0}
-  .qa .q{font-weight:700;font-size:16px;display:flex;gap:8px}
-  .qa .q:before{content:"Q";color:var(--blue);font-weight:800}
-  .qa .a{margin:6px 0 0 22px;color:var(--sub);font-size:15.5px}
-  .close{margin-top:32px;background:var(--grey);border-radius:16px;padding:16px 18px;color:var(--sub);font-size:15px;text-align:center;font-weight:500}
-  .contact{margin-top:40px}
-  .kakao{display:flex;align-items:center;gap:16px;background:#FEE500;color:#191919;border-radius:18px;padding:20px 22px;text-decoration:none;border:1px solid #E6CF00}
-  .kakao:hover{filter:brightness(1.03)}
-  .kakao svg{width:64px;height:64px;fill:#191919;flex:none}
-  .kakao b{display:block;font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.25}
-  .kakao small{display:block;font-size:14px;color:#3A3A2A;margin-top:4px;font-weight:500}
-  @media (max-width:360px){ h1{font-size:25px} .money .v{font-size:30px} .kakao b{font-size:18px} }
+  .qa .q{display:flex;gap:8px;font-weight:700;font-size:16px;line-height:1.5}
+  .qa .q::before{content:"Q";flex:none;width:14px;color:var(--accent-ink);font-weight:800}
+  .qa .a{margin:6px 0 0 22px;color:var(--sub);font-size:15px;text-wrap:pretty}
+
+  .contact .lead{margin:0 0 14px}
+  .kakao{display:flex;align-items:center;gap:16px;padding:20px 22px;border-radius:20px;background:#FEE500;color:#191919;text-decoration:none;border:1px solid #E6CF00;transition:transform .15s ease,box-shadow .2s ease}
+  .kakao:hover{box-shadow:0 10px 24px -14px rgba(90,75,0,.55)}
+  .kakao:active{transform:scale(.985)}
+  .kakao:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+  .kakao svg{width:48px;height:48px;fill:#191919;flex:none}
+  .kakao b{display:block;font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1.3}
+  .kakao small{display:block;margin-top:4px;font-size:14px;font-weight:500;color:#3A3A2A}
+
+  @media (max-width:360px){ .money .v{font-size:33px} .kakao{gap:12px;padding:18px} .kakao svg{width:42px;height:42px} .kakao b{font-size:17.5px} }
+  @media (prefers-reduced-motion:reduce){ .kakao{transition:none} }
 </style>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f4fb1501470e436fb1efa565cb4e738c"}'></script>
 </head>
@@ -70,7 +91,7 @@
   <div class="top"><div class="brand"><img src="logo.png" alt="flyout 로고">flyout</div><div class="badge">크리에이터 모집</div></div>
 
   <p class="hello">안녕하세요! 문의 주셔서 감사합니다 :)</p>
-  <h1>통화한 만큼<br><span>분당 1,000원</span> 정산됩니다</h1>
+  <h1>통화한 만큼<br><span>분당 1,000원</span>으로 정산됩니다</h1>
   <p class="lead">출근 없음, 대기시간 없음. 딱 통화한 시간만큼만 정산됩니다.</p>
 
   <div class="money">
@@ -79,31 +100,36 @@
     <div class="rows">
       <div class="r"><span>30분</span><b>30,000원</b></div>
       <div class="r"><span>1시간</span><b>60,000원</b></div>
-      <div class="r"><span>주 최대 (그 이상도 협의 후 지급 가능)</span><b>240,000원</b></div>
+      <div class="r"><span>주 최대<small>(그 이상도 협의 후 지급 가능)</small></span><b>240,000원</b></div>
       <div class="r"><span>지급일</span><b>매주 목요일</b></div>
     </div>
+  </div>
+
+  <div class="extra">
+    <span class="ico"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z"/></svg></span>
+    <p><b>통화 외에도 사진 판매 및 영상 판매로 수익을 올릴 수 있습니다.</b>해당 부분은 전담 매니저가 케어하며 도움 드리니 하고자 하는 마음만 있으면 누구나 가능합니다!</p>
   </div>
 
   <section>
     <h2>어떤 일인가요?</h2>
     <div class="steps">
       <div class="step">
-        <div class="ico"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 19c1-3 9-3 10 0"/></svg></div>
-        <div><b>사진으로 프로필을 꾸미면</b><p>인스타처럼 피드에 사진을 올려 프로필을 꾸미면, 유저가 먼저 메시지를 보내옵니다.</p></div>
+        <span class="ico"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M216,40H72A16,16,0,0,0,56,56V72H40A16,16,0,0,0,24,88V200a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V184h16a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM72,56H216v62.75l-10.07-10.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L72,109.37ZM184,200H40V88H56v80a16,16,0,0,0,16,16H184Zm32-32H72V132l36-36,49.66,49.66a8,8,0,0,0,11.31,0L194.63,120,216,141.38V168ZM160,84a12,12,0,1,1,12,12A12,12,0,0,1,160,84Z"/></svg></span>
+        <div><b>사진을 업로드하고</b><p>인스타처럼 피드에 사진을 올려 프로필을 꾸미면, 유저가 먼저 메시지를 보내옵니다.</p></div>
       </div>
       <div class="step">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></div>
-        <div><b>잠깐 메시지를 나누고</b><p>메시지를 잠깐 주고받은 뒤, 앱에서 통화를 진행하시면 됩니다.</p></div>
+        <span class="ico"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"/></svg></span>
+        <div><b>잠깐 메시지를 나누고</b><p>메시지를 주고받으며 친밀감을 쌓은 뒤, 앱에서 통화를 진행하시면 됩니다.</p></div>
       </div>
       <div class="step">
-        <div class="ico"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></div>
+        <span class="ico"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M144.27,45.93a8,8,0,0,1,9.8-5.66,86.22,86.22,0,0,1,61.66,61.66,8,8,0,0,1-5.66,9.8A8.23,8.23,0,0,1,208,112a8,8,0,0,1-7.73-5.94,70.35,70.35,0,0,0-50.33-50.33A8,8,0,0,1,144.27,45.93Zm-2.33,41.8c13.79,3.68,22.65,12.54,26.33,26.33A8,8,0,0,0,176,120a8.23,8.23,0,0,0,2.07-.27,8,8,0,0,0,5.66-9.8c-5.12-19.16-18.5-32.54-37.66-37.66a8,8,0,1,0-4.13,15.46Zm81.94,95.35A56.26,56.26,0,0,1,168,232C88.6,232,24,167.4,24,88A56.26,56.26,0,0,1,72.92,32.12a16,16,0,0,1,16.62,9.52l21.12,47.15,0,.12A16,16,0,0,1,109.39,104c-.18.27-.37.52-.57.77L88,129.45c7.49,15.22,23.41,31,38.83,38.51l24.34-20.71a8.12,8.12,0,0,1,.75-.56,16,16,0,0,1,15.17-1.4l.13.06,47.11,21.11A16,16,0,0,1,223.88,183.08Zm-15.88-2s-.07,0-.11,0h0l-47-21.05-24.35,20.71a8.44,8.44,0,0,1-.74.56,16,16,0,0,1-15.75,1.14c-18.73-9.05-37.4-27.58-46.46-46.11a16,16,0,0,1,1-15.7,6.13,6.13,0,0,1,.57-.77L96,95.15l-21-47a.61.61,0,0,1,0-.12A40.2,40.2,0,0,0,40,88,128.14,128.14,0,0,0,168,216,40.21,40.21,0,0,0,208,181.07Z"/></svg></span>
         <div><b>통화한 시간만큼 정산</b><p>딱 통화한 시간만큼만 정산됩니다.</p></div>
       </div>
     </div>
-    <ul class="list" style="margin-top:18px">
-      <li>출근 없음, 대기시간 없음</li>
-      <li>통화 전 유저와 잠깐 메시지 나누는 시간만 있으면 OK</li>
-      <li>딱 통화한 시간만큼만 정산</li>
+    <ul class="list">
+      <li><span class="chk"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></svg></span>출근 없음, 대기시간 없음</li>
+      <li><span class="chk"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></svg></span>통화 전 유저와 잠깐 메시지 나누는 시간만 있으면 OK</li>
+      <li><span class="chk"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></svg></span>딱 통화한 시간만큼만 정산</li>
     </ul>
   </section>
 
@@ -119,8 +145,8 @@
   <section>
     <h2>한도 &amp; 지급일</h2>
     <ul class="list">
-      <li>주 최대 24만원 (그 이상도 협의 후 지급 가능)</li>
-      <li>매주 목요일 주급 지급</li>
+      <li><span class="chk"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></svg></span>주 최대 24만원 (그 이상도 협의 후 지급 가능)</li>
+      <li><span class="chk"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></svg></span>매주 목요일 주급 지급</li>
     </ul>
   </section>
 
@@ -135,6 +161,8 @@
       <div class="qa"><div class="q">가입할 때 돈을 내야 하나요?</div><div class="a">아니요. 돈을 요구하는 알바는 사기입니다.</div></div>
       <div class="qa"><div class="q">유저가 많이 있나요?</div><div class="a">외부 광고로 유저는 충분히 확보된 상태이고, 오히려 크리에이터가 부족한 상황입니다.</div></div>
       <div class="qa"><div class="q">통화는 어떤 내용으로 진행하나요?</div><div class="a">정해진 건 없습니다. 메시지로 먼저 이야기를 나눈 뒤 통화하기 때문에 유저 성향에 따라 다르고, 스몰토크나 일상 이야기가 대부분입니다.</div></div>
+      <div class="qa"><div class="q">통화를 반드시 해야 하나요?</div><div class="a">통화가 많이 어려우시면, 사진 또는 영상 판매와 1:1 채팅 메시지로도 수익을 올리실 수 있습니다.</div></div>
+      <div class="qa"><div class="q">하는 사람(고객)이 많이 있나요?</div><div class="a">현재 다양한 외부 광고로 고객은 유입되고 있는데, 크리에이터가 없는 상황입니다. 빨리 오실수록 더욱 많은 매출을 올리실 수 있습니다.</div></div>
       <div class="qa"><div class="q">반드시 19금으로 해야 하나요?</div><div class="a">아닙니다! 수위가 높으신 분들이 계시긴 하지만 반드시 그렇게 할 필요는 없습니다.</div></div>
       <div class="qa"><div class="q">계약서가 있나요?</div><div class="a">활동을 원하시면 비용 지급 관련 계약서를 이메일로 보내드립니다. 독소 조항이나 강제성은 전혀 없고, 순수하게 비용 지급 내용만 담겨 있습니다.</div></div>
       <div class="qa"><div class="q">계약서를 왜 써야 하나요?</div><div class="a">세금 공제가 필요해서입니다. 모든 수익은 사업자가 아닌 경우 반드시 3.3%의 소득세를 공제 후 수익을 입금해 드립니다.</div></div>
@@ -145,7 +173,7 @@
 
   <section class="contact">
     <h2>문의하기</h2>
-    <p class="lead" style="margin:0 0 14px">그 외 궁금하신 점은 카카오톡 오픈채팅으로 편하게 질문 주세요!</p>
+    <p class="lead">그 외 궁금하신 점은 카카오톡 오픈채팅으로 편하게 질문 주세요!</p>
     <a class="kakao" href="https://open.kakao.com/o/sq0CQA3b">
       <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6C12.4 6 3 13.3 3 22.3c0 5.8 3.9 10.9 9.8 13.8-.4 1.4-1.5 5.3-1.7 6.1-.3 1 .4 1 .8.7.3-.2 5.1-3.4 7.2-4.8 1.6.2 3.2.4 4.9.4 11.6 0 21-7.3 21-16.2S35.6 6 24 6z"/></svg>
       <span><b>카카오톡 오픈채팅으로 문의하기</b><small>flyout 크리에이터 문의 · 바로 답변</small></span>
