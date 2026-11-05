@@ -286,7 +286,7 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
   const preview = !GA4.enabled;
   const detectedSource = /Instagram/i.test(ua)?'instagram':/FBAN|FBAV/i.test(ua)?'facebook':'';
   const source = clean(qs.get('utm_source')||qs.get('s'))||detectedSource||(preview?'preview':'flyout');
-  const medium = clean(qs.get('utm_medium')||qs.get('m'))||(detectedSource?'paid_social':preview?'preview':'referral');
+  const taggedMedium = clean(qs.get('utm_medium')||qs.get('m')), paidVisit = /^(paid_social|paidsocial|paid|cpc|ppc)$/i.test(taggedMedium); const medium = taggedMedium||(detectedSource?'paid_social':preview?'preview':'referral'); // Only explicit paid tags change Android routing.
   const campaign = clean(qs.get('utm_campaign')||qs.get('c'))||(preview?'test_creator_landing':'creator_landing');
   const adContent = clean(qs.get('utm_content'));
   const clickIds = {};
@@ -305,9 +305,9 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
     const attribution=attributionFor(c).toString();
     const web='https://flyout.fun/register?'+attribution;
     const play='https://play.google.com/store/apps/details?'+new URLSearchParams({id:'fun.flyout.app',hl:'ko',referrer:attribution}).toString();
-    // The legacy /join/ bridge overwrites utm_content and drops creator_id/gclid.
-    // Direct web signup keeps these values. iOS in-app users see a Safari/copy hint.
-    return {web,play,target:isAndroid?play:web,device};
+    const chrome='intent://flyout.fun/register?'+attribution+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(web)+';end'; // Chrome permits Google login for in-app ad visitors.
+    const route=!isAndroid?'web':!paidVisit?'play':(inApp||/; wv\)/.test(ua))?'chrome':'web';
+    const target=route==='play'?play:route==='chrome'?chrome:web; return {web,play,chrome,route,target,device};
   }
   function safePageLocation(){
     const url=new URL(location.origin+location.pathname);
@@ -341,7 +341,7 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
     // sign_up is ONLY emitted by Flyout after successful account creation, never here.
   }
   function outbound(e,c){
-    const params={creator_id:c.id,client_platform:device,destination:isAndroid?'google_play':'flyout_web'};
+    const params={creator_id:c.id,client_platform:device,destination:linksFor(c).route==='play'?'google_play':'flyout_web'};
     // Native link navigation is immediate. Google decorates the actual clicked link
     // and flushes queued events when the page is hidden; no analytics callback gate.
     track('signup_outbound',params);
@@ -482,7 +482,7 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
   $('brand-home').onclick=()=>{window.scrollTo({top:0,behavior:'instant'});$('creators-title').focus({preventScroll:true});};
   window.addEventListener('pageshow',()=>{state.navigating=false;});
   window.FlyoutPreview=Object.freeze({creators:CREATORS,events,linksFor:id=>{const c=CREATORS.find(c=>c.id===id);return c?linksFor(c):null;},
-    context:Object.freeze({source,medium,campaign,isIOS,isAndroid,inApp,device,ga4Enabled:GA4.enabled,measurementId:GA4.measurementId})});
+    context:Object.freeze({source,medium,campaign,paidVisit,isIOS,isAndroid,inApp,device,ga4Enabled:GA4.enabled,measurementId:GA4.measurementId})});
   // Local previews never send analytics; HTTPS production host gating is above.
   initAnalytics();buildCards();track('landing_view',{client_platform:device});
 })();
