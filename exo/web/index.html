@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flyout</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{ --bg:#FFFFFF; --grey:#F2F4F6; --grey2:#E5E8EB; --ink:#191F28; --sub:#4E5968; --dim:#8B95A1; --blue:#8B5CF6; --blue-soft:#F1EBFF; --blue-ink:#6A3DE8; }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;word-break:keep-all}
+  .wrap{max-width:420px;margin:0 auto;padding:48px 20px 40px;text-align:center}
+  .brand{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:800;font-size:22px;letter-spacing:-.02em}
+  .brand img{height:40px;width:auto;display:block}
+  h1{font-size:22px;line-height:1.4;font-weight:800;letter-spacing:-.02em;margin:28px 0 8px}
+  p{margin:0;color:var(--sub);font-size:15px}
+  .spin{width:28px;height:28px;border:3px solid var(--grey2);border-top-color:var(--blue);border-radius:50%;margin:22px auto 0;animation:r .9s linear infinite}
+  @keyframes r{to{transform:rotate(360deg)}}
+  .btns{display:grid;gap:10px;margin-top:28px}
+  .btn{display:block;padding:15px 18px;border-radius:14px;font-weight:700;font-size:16px;text-decoration:none;color:#fff;background:var(--ink)}
+  .btn.play{background:var(--blue)}
+  .hint{margin-top:18px;color:var(--dim);font-size:13px}
+</style>
+<noscript><style>#spin{display:none}#btns{display:grid!important}#hint{display:block}</style></noscript>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><img src="/logo.png" alt="" onerror="this.style.display='none'">flyout</div>
+  <h1 id="h">Flyout으로 이동 중…</h1>
+  <p id="p">잠시만 기다려 주세요.</p>
+  <div class="spin" id="spin"></div>
+  <div class="btns" id="btns" style="display:none">
+    <a class="btn" id="open" href="https://flyout.fun/">Flyout 열기</a>
+  </div>
+  <p class="hint" id="hint" hidden>자동으로 열리지 않으면 위 버튼을 눌러 주세요.</p>
+</div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f4fb1501470e436fb1efa565cb4e738c"}'></script>
+<script>
+(function () {
+  var target = 'https://flyout.fun/' + location.search;
+  document.getElementById('open').href = target;
+  window.__exoweb = { target: target };
+
+  var done = false;
+  function go() {
+    if (done) return; done = true;
+    location.replace(target);
+  }
+  // 방문 집계(비콘)가 나간 뒤 이동: load 후 300ms, 늦어도 1.5초
+  window.addEventListener('load', function () { setTimeout(go, 300); });
+  setTimeout(go, 1500);
+  setTimeout(function () {
+    document.getElementById('spin').hidden = true;
+    document.getElementById('btns').style.display = 'grid';
+    document.getElementById('hint').hidden = false;
+  }, 2500);
+})();
+</script>
+</body>
+</html>
