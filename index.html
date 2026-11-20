@@ -248,14 +248,13 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
 
 <dialog id="ios-notice" class="ios-notice" aria-labelledby="ios-title" aria-describedby="ios-copy">
   <div class="notice-head">
-    <h2 id="ios-title">Flyout 웹에서 만나요</h2>
+    <h2 id="ios-title">iPhone 앱 받기</h2>
     <button class="icon-button" id="ios-close" aria-label="안내 닫기"><span data-icon="x"></span></button>
   </div>
-  <p class="notice-copy" id="ios-copy"><span>현재 아이폰 어플은 준비 중입니다.</span><span>웹사이트를 이용해 주세요.</span></p>
-  <p class="notice-help" id="ios-inapp-help" hidden>구글로 가입하려면 앱 메뉴에서 Safari로 열어 주세요. 가입 링크를 복사해서 열 수도 있어요.</p>
+  <p class="notice-copy" id="ios-copy"><span>구글로 가입하려면 앱 메뉴에서 Safari로 열어 주세요.</span><span>링크를 복사해서 열 수도 있어요.</span></p>
   <a class="primary notice-primary" id="ios-confirm">확인</a>
   <p class="notice-destination">확인을 누르면 웹페이지로 이동해요.</p>
-  <button class="copy-link" id="ios-copy-link" hidden>가입 링크 복사</button>
+  <button class="copy-link" id="ios-copy-link" hidden>링크 복사</button>
   <p class="copy-status" id="copy-status" role="status"></p>
 </dialog>
 
@@ -304,10 +303,16 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
   function linksFor(c){
     const attribution=attributionFor(c).toString();
     const web='https://flyout.fun/register?'+attribution;
+    const ios='https://flyout.fun/ios-app?'+attribution;
     const play='https://play.google.com/store/apps/details?'+new URLSearchParams({id:'fun.flyout.app',hl:'ko',referrer:attribution}).toString();
     const chrome='intent://flyout.fun/register?'+attribution+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(web)+';end'; // Chrome permits Google login for in-app ad visitors.
-    const route=!isAndroid?'web':!paidVisit?'play':(inApp||/; wv\)/.test(ua))?'chrome':'web';
-    const target=route==='play'?play:route==='chrome'?chrome:web; return {web,play,chrome,route,target,device};
+    const targets={web,ios,play,chrome};
+    let route=isIOS?'ios':'web';
+    if(isAndroid){
+      if(!paidVisit) route='play';
+      else if(inApp||/; wv\)/.test(ua)) route='chrome';
+    }
+    return {...targets,route,target:targets[route],device};
   }
   function safePageLocation(){
     const url=new URL(location.origin+location.pathname);
@@ -341,7 +346,9 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
     // sign_up is ONLY emitted by Flyout after successful account creation, never here.
   }
   function outbound(e,c){
-    const params={creator_id:c.id,client_platform:device,destination:linksFor(c).route==='play'?'google_play':'flyout_web'};
+    const route=linksFor(c).route;
+    const destination=route==='play'?'google_play':route==='ios'?'ios_app':'flyout_web';
+    const params={creator_id:c.id,client_platform:device,destination};
     // Native link navigation is immediate. Google decorates the actual clicked link
     // and flushes queued events when the page is hidden; no analytics callback gate.
     track('signup_outbound',params);
@@ -457,14 +464,17 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
       prev.onclick=()=>slider.step(-1);next.onclick=()=>slider.step(1);stage.append(prev,next);
       const info=el('div','creator-info');info.append(el('h2',null,c.name));
       const cta=el('a','primary',c.shortName+' 님과 대화하기');cta.dataset.signup=c.id;cta.href=linksFor(c).target;
-      if(isIOS){cta.setAttribute('aria-haspopup','dialog');cta.setAttribute('aria-controls','ios-notice');}
-      cta.addEventListener('click',e=>{track('creator_cta_click',{creator_id:c.id,client_platform:device});if(isIOS){e.preventDefault();showIOS(c);}else outbound(e,c);});
+      if(isIOS&&inApp){cta.setAttribute('aria-haspopup','dialog');cta.setAttribute('aria-controls','ios-notice');}
+      cta.addEventListener('click',e=>{
+        track('creator_cta_click',{creator_id:c.id,client_platform:device});
+        if(isIOS&&inApp){e.preventDefault();showIOS(c);}else outbound(e,c);
+      });
       info.append(cta);card.append(stage,row,info);$('creator-grid').append(card);
     }
   }
   function showIOS(c){
-    state.iosCreator=c;state.navigating=false;$('ios-confirm').href=linksFor(c).web;$('copy-status').textContent='';
-    $('ios-inapp-help').hidden=!inApp;$('ios-copy-link').hidden=!inApp;
+    state.iosCreator=c;state.navigating=false;$('ios-confirm').href=linksFor(c).ios;$('copy-status').textContent='';
+    $('ios-copy-link').hidden=!inApp;
     document.body.classList.add('dialog-open');$('ios-notice').showModal();$('ios-confirm').focus();track('ios_notice_open',{creator_id:c.id});
   }
   for(const dialog of [$('ios-notice')]){
@@ -476,7 +486,7 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
   $('ios-confirm').addEventListener('click',e=>{if(!state.iosCreator){e.preventDefault();return;}outbound(e,state.iosCreator);});
   $('ios-copy-link').onclick=async()=>{
     if(!state.iosCreator)return;const c=state.iosCreator;
-    try{await navigator.clipboard.writeText(linksFor(c).web);$('copy-status').textContent='복사했어요. Safari 주소창에 붙여 넣어 주세요.';track('signup_link_copy',{creator_id:c.id});}
+    try{await navigator.clipboard.writeText(linksFor(c).ios);$('copy-status').textContent='복사했어요. Safari 주소창에 붙여 넣어 주세요.';track('signup_link_copy',{creator_id:c.id});}
     catch{$('copy-status').textContent='확인 버튼을 길게 눌러 링크를 복사해 주세요.';}
   };
   $('brand-home').onclick=()=>{window.scrollTo({top:0,behavior:'instant'});$('creators-title').focus({preventScroll:true});};
