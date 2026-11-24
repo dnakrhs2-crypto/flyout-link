@@ -25,7 +25,6 @@
   .brand img{height:34px;width:auto}
   .badge{font-size:13px;font-weight:650;color:var(--accent-ink);background:var(--accent-soft);padding:6px 12px;border-radius:999px}
 
-  .hello{margin:0 0 10px;color:var(--dim);font-size:15px;font-weight:500}
   h1{margin:0;font-size:clamp(27px,7.4vw,34px);line-height:1.32;font-weight:800;letter-spacing:-.03em;text-wrap:balance}
   h1 span{color:var(--accent)}
   .lead{margin:12px 0 0;color:var(--sub);font-size:16px;text-wrap:pretty}
@@ -39,10 +38,14 @@
   .money .r small{display:block;margin-top:1px;font-size:13px;color:var(--dim)}
   .money .r b{color:var(--ink);font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 
-  .extra{margin-top:12px;display:flex;gap:14px;align-items:flex-start;padding:20px 20px 20px 18px;border-radius:20px;background:var(--accent-soft)}
-  .extra .ico{background:#FFFFFF}
-  .extra p{margin:0;color:var(--sub);font-size:15px;text-wrap:pretty}
-  .extra p b{display:block;margin-bottom:4px;color:var(--ink);font-size:16px;font-weight:700;line-height:1.5}
+  .sell{margin-top:12px;padding:24px 22px 22px;border-radius:20px;background:var(--accent-soft)}
+  .sell .kind{display:flex;align-items:center;gap:8px;color:var(--accent-ink);font-size:14.5px;font-weight:700}
+  .sell .kind .ico{width:38px;height:38px;font-size:20px;background:#FFFFFF}
+  .sell .kind b{margin-left:4px;font-weight:700}
+  .sell h2{margin:16px 0 0;font-size:clamp(23px,6.3vw,26px);line-height:1.36;letter-spacing:-.03em;text-wrap:balance}
+  .sell > p{margin:10px 0 0;color:var(--sub);font-size:15.5px;text-wrap:pretty}
+  .sell .list{margin-top:14px}
+  .sell .list li{font-size:15px}
 
   section{margin-top:48px}
   h2{margin:0 0 18px;font-size:22px;font-weight:800;letter-spacing:-.025em;line-height:1.35}
@@ -83,7 +86,7 @@
   .kid{margin:14px 0 0;text-align:center;font-size:16px;color:var(--sub)}
   .kid b{color:var(--ink);font-weight:700;-webkit-user-select:all;user-select:all}
 
-  @media (max-width:360px){ .money .v{font-size:33px} .kakao{gap:12px;padding:18px} .kakao svg{width:42px;height:42px} .kakao b{font-size:17.5px} }
+  @media (max-width:360px){ .sell{padding:22px 18px 18px} .money .v{font-size:33px} .kakao{gap:12px;padding:18px} .kakao svg{width:42px;height:42px} .kakao b{font-size:17.5px} }
   @media (prefers-reduced-motion:reduce){ .kakao{transition:none} }
 </style>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f4fb1501470e436fb1efa565cb4e738c"}'></script>
@@ -92,7 +95,6 @@
 <div class="wrap">
   <div class="top"><div class="brand"><img src="logo.png" alt="flyout 로고">flyout</div><div class="badge">크리에이터 모집</div></div>
 
-  <p class="hello">안녕하세요! 문의 주셔서 감사합니다 :)</p>
   <h1>통화한 만큼<br><span>분당 1,000원</span>으로 정산됩니다</h1>
   <p class="lead">출근 없음, 대기시간 없음. 딱 통화한 시간만큼만 정산됩니다.</p>
 
@@ -107,9 +109,13 @@
     </div>
   </div>
 
-  <div class="extra">
-    <span class="ico"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z"/></svg></span>
-    <p><b>통화 외에도 사진 판매 및 영상 판매로 수익을 올릴 수 있습니다.</b>해당 부분은 전담 매니저가 케어하며 도움 드리니 하고자 하는 마음만 있으면 누구나 가능합니다!</p>
+  <div class="sell">
+    <div class="kind"><span class="ico"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M216,40H72A16,16,0,0,0,56,56V72H40A16,16,0,0,0,24,88V200a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V184h16a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM72,56H216v62.75l-10.07-10.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L72,109.37ZM184,200H40V88H56v80a16,16,0,0,0,16,16H184Zm32-32H72V132l36-36,49.66,49.66a8,8,0,0,0,11.31,0L194.63,120,216,141.38V168ZM160,84a12,12,0,1,1,12,12A12,12,0,0,1,160,84Z"/></svg></span><span class="ico"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M251.77,73a8,8,0,0,0-8.21.39L208,97.05V72a16,16,0,0,0-16-16H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V159l35.56,23.71A8,8,0,0,0,248,184a8,8,0,0,0,8-8V80A8,8,0,0,0,251.77,73ZM192,184H32V72H192V184Zm48-22.95-32-21.33V116.28L240,95Z"/></svg></span><b>사진 · 영상 판매</b></div>
+    <h2>일하지 않는 시간에도<br>수익이 생깁니다</h2>
+    <p>통화 금액 말고도 사진과 영상을 판매할 수 있습니다. 한 번 올려 두면 내가 일하지 않아도 판매될 때마다 수익이 됩니다.</p>
+    <ul class="list">
+      <li><span class="chk"><svg class="ic" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></svg></span>전담 매니저가 케어하며 도움 드리니 하고자 하는 마음만 있으면 누구나 가능합니다!</li>
+    </ul>
   </div>
 
   <section>
