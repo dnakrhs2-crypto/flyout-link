@@ -188,5 +188,42 @@
     <p class="kid">카카오톡 ID : <b>connectt</b></p>
   </section>
 </div>
+<script>
+// 광고·홍보 링크(주소에 utm_source)로 온 방문만 GA4에 센다. 꼬리표 없는 방문은 위 방문 집계만(예전 그대로).
+// 첫 화면(flyout.kr/?utm_…)에서 모집 버튼으로 넘어온 방문은 그 주소의 꼬리표를 이어받는다.
+(() => {
+  const ID = 'G-L7RKHVKS28';
+  if (location.protocol !== 'https:' || !['flyout.kr', 'www.flyout.kr'].includes(location.hostname)) return;
+  const clean = (value, max = 160) => String(value || '').replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, max);
+  let qs = new URLSearchParams(location.search), referrer = '';
+  try {
+    const r = new URL(document.referrer);
+    referrer = r.origin + r.pathname;
+    if (!(qs.get('utm_source') || qs.get('s')) && r.origin === location.origin) qs = r.searchParams;
+  } catch {}
+  const source = clean(qs.get('utm_source') || qs.get('s'));
+  if (!source) return;
+  const medium = clean(qs.get('utm_medium') || qs.get('m')), campaign = clean(qs.get('utm_campaign') || qs.get('c'));
+  const page = new URL(location.origin + location.pathname);
+  page.searchParams.set('utm_source', source);
+  if (medium) page.searchParams.set('utm_medium', medium);
+  if (campaign) page.searchParams.set('utm_campaign', campaign);
+  const tags = {landing_variant: 'recruit_page', landing_source: source, landing_medium: medium, landing_campaign: campaign};
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', ID, {send_page_view: true, page_location: page.href, page_referrer: referrer, campaign_source: source,
+    ...(medium ? {campaign_medium: medium} : {}), ...(campaign ? {campaign_name: campaign} : {}),
+    allow_google_signals: false, allow_ad_personalization_signals: false});
+  window.gtag('event', 'recruit_view', {send_to: ID, ...tags});
+  document.querySelectorAll('a[href*="open.kakao.com"]').forEach(a => a.addEventListener('click', () => {
+    window.gtag('event', 'recruit_kakao_click', {send_to: ID, ...tags});
+  }));
+  const loader = document.createElement('script');
+  loader.async = true;
+  loader.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
+  document.head.append(loader);
+})();
+</script>
 </body>
 </html>
