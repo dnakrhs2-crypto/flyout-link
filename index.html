@@ -308,6 +308,14 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
   const adContent = clean(qs.get('utm_content'));
   const clickIds = {};
   for(const key of ['fbclid','gclid','gbraid','wbraid']){const value=String(qs.get(key)||'');if(/^[A-Za-z0-9_-]{1,500}$/.test(value))clickIds[key]=value;}
+  // A tagged visit carries its tags on the recruit links themselves, so the recruit page keeps the same
+  // source when it is opened in another browser or window (document.referrer is gone there).
+  if(clean(qs.get('utm_source')||qs.get('s'))){
+    const recruit=new URLSearchParams({utm_source:source});
+    if(taggedMedium)recruit.set('utm_medium',taggedMedium);
+    if(clean(qs.get('utm_campaign')||qs.get('c')))recruit.set('utm_campaign',campaign);
+    document.querySelectorAll('a.creator-apply').forEach(a=>{a.href='/creator/?'+recruit;});
+  }
   function attributionFor(c){
     // Preserve ad identity and selected creator in a standard GA4 reporting dimension.
     // creator_id is also separate for future app/web signup integrations.
@@ -487,6 +495,8 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
         track('creator_cta_click',{creator_id:c.id,client_platform:device});
         if(isIOS&&inApp){e.preventDefault();showIOS(c);}else outbound(e,c);
       });
+      // The middle button opens the link in a new tab and fires auxclick instead of click.
+      cta.addEventListener('auxclick',e=>{if(e.button!==1)return;track('creator_cta_click',{creator_id:c.id,client_platform:device});outbound(e,c);});
       info.append(cta);card.append(stage,row,info);$('creator-grid').append(card);
     }
   }

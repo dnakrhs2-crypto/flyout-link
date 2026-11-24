@@ -216,9 +216,12 @@
     ...(medium ? {campaign_medium: medium} : {}), ...(campaign ? {campaign_name: campaign} : {}),
     allow_google_signals: false, allow_ad_personalization_signals: false});
   window.gtag('event', 'recruit_view', {send_to: ID, ...tags});
-  document.querySelectorAll('a[href*="open.kakao.com"]').forEach(a => a.addEventListener('click', () => {
-    window.gtag('event', 'recruit_kakao_click', {send_to: ID, ...tags});
-  }));
+  const kakaoClick = () => window.gtag('event', 'recruit_kakao_click', {send_to: ID, ...tags});
+  document.querySelectorAll('a[href*="open.kakao.com"]').forEach(a => {
+    a.addEventListener('click', kakaoClick);
+    // 마우스 가운데 버튼(새 탭으로 열기)은 click 이 아니라 auxclick 으로 온다.
+    a.addEventListener('auxclick', e => { if (e.button === 1) kakaoClick(); });
+  });
   const loader = document.createElement('script');
   loader.async = true;
   loader.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
